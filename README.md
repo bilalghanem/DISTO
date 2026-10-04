@@ -50,7 +50,14 @@ scores = scorer.score_each(article, question, answer, ["The Red Sea", "The Atlan
 paper_score = sum(scores) / len(scores)
 ```
 
-`score` instead rates the whole set of up to three distractors in one pass, which is what the model was trained on.
+To score a single distractor, pass a one-item list. This gives the same result as `score_each`:
+
+```python
+scorer.score(article, question, answer, ["The Red Sea"])  # ≈ 0.997
+```
+
+`score` with several distractors rates the whole set of up to three in one pass, which is what the model was
+trained on.
 
 Score many questions at once:
 
@@ -71,6 +78,13 @@ python -m disto examples/input.jsonl -o scores.jsonl
 
 Each input line is a JSON object with `article`, `question`, `answer` and `distractors`. The output repeats the
 line and adds a `disto_score` field.
+
+Add `--each` to score every distractor on its own, as in the paper. The output then has `disto_scores` (one value
+per distractor) and `disto_score` (their mean):
+
+```bash
+python -m disto examples/input.jsonl --each -o scores.jsonl
+```
 
 ## How it works
 
